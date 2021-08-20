@@ -16,14 +16,13 @@ import javax.ws.rs.core.Response;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-@Path("/blob")
+@Path("/refactor")
 @Stateless
 public class RefactoringController {
     @EJB
     private SampleGenerator sampleGenerator;
 
     @POST
-    @Path("/class")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response refactor(RefactoringInput input) {
         FileRepository repository = new FileRepositoryImpl();

@@ -11,8 +11,6 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,8 +26,6 @@ public class GodClassRefactoring implements Refactoring {
 
     @Override
     public String doRefactoring(String firstClassPath, String secondClassPath) {
-            StaticJavaParser.getConfiguration().setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_11);
-            StaticJavaParser.getConfiguration().setCharacterEncoding(StandardCharsets.UTF_8);
             try {
                 CompilationUnit firstClass = StaticJavaParser.parse(new File(firstClassPath));
                 CompilationUnit secondClass = StaticJavaParser.parse(new File(secondClassPath));
