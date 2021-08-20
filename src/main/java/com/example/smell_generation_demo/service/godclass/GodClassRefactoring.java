@@ -18,21 +18,16 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class GodClassRefactoring implements Refactoring {
-    private final String firstClassPath;
-    private final String secondClassPath;
     private final String destination;
-
     private final FileRepository repository;
 
-    public GodClassRefactoring(String firstClassPath, String secondClassPath, String destination, FileRepository repository) {
-        this.firstClassPath = firstClassPath;
-        this.secondClassPath = secondClassPath;
+    public GodClassRefactoring(String destination, FileRepository repository) {
         this.destination = destination;
         this.repository = repository;
     }
 
     @Override
-    public String doRefactoring() {
+    public String doRefactoring(String firstClassPath, String secondClassPath) {
             StaticJavaParser.getConfiguration().setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_11);
             StaticJavaParser.getConfiguration().setCharacterEncoding(StandardCharsets.UTF_8);
             try {

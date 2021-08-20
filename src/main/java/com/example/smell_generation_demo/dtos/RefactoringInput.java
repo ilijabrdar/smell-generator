@@ -17,4 +17,5 @@ public class RefactoringInput {
     private float samplingRatio;
     private String destinationPath;
     private int maxIterations;
+    private String smellType;
 }
