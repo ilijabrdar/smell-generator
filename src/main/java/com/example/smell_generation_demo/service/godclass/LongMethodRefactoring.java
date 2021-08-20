@@ -23,18 +23,17 @@ public class LongMethodRefactoring implements Refactoring {
 
     @Override
     public String doRefactoring(String firstMethodPath, String secondMethodPath) {
-        String firstMethodWrapped = "public class No {" + repository.readFile(firstMethodPath) + "}";
+        String firstMethodWrapped = "public class Random {" + repository.readFile(firstMethodPath) + "}";
         String secondMethodWrapped = "public class Name {" + repository.readFile(secondMethodPath) + "}";
         try {
-            CompilationUnit firstClass = StaticJavaParser.parse(new File(firstMethodWrapped));
-            CompilationUnit secondClass = StaticJavaParser.parse(new File(secondMethodWrapped));
+            CompilationUnit firstClass = StaticJavaParser.parse(firstMethodWrapped);
+            CompilationUnit secondClass = StaticJavaParser.parse(secondMethodWrapped);
 
             ClassOrInterfaceDeclaration firstClassDeclaration = firstClass.findAll(ClassOrInterfaceDeclaration.class)
                     .stream().findFirst().orElseThrow(ClassNotFoundException::new);
             ClassOrInterfaceDeclaration secondClassDeclaration = secondClass.findAll(ClassOrInterfaceDeclaration.class)
                     .stream().findFirst().orElseThrow(ClassNotFoundException::new);
 
-            firstClassDeclaration.getMethods().forEach(secondClassDeclaration::addMember);
             mergeMethods(firstClassDeclaration, secondClassDeclaration);
             String filename = getFilename(firstClassDeclaration, secondClassDeclaration);
             repository.dumpToFile(destination + File.separator + filename + ".java", secondClass.toString());
@@ -50,7 +49,8 @@ public class LongMethodRefactoring implements Refactoring {
         MethodDeclaration secondMethod = secondClass.getMethods().get(0);
         BlockStmt firstBody = firstMethod.getBody().orElseThrow(IllegalArgumentException::new);
         BlockStmt secondBody = secondMethod.getBody().orElseThrow(IllegalArgumentException::new);
-        secondBody.getStatements().addAll(firstBody.getStatements());
+        firstBody.getStatements().forEach(secondBody.getStatements()::addLast);
+        secondMethod.setName(firstMethod.getNameAsString() + secondMethod.getNameAsString());
     }
 
     private String getFilename(ClassOrInterfaceDeclaration firstClass, ClassOrInterfaceDeclaration secondClass) {
