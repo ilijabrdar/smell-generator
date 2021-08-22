@@ -23,11 +23,9 @@ public class LongMethodRefactoring implements Refactoring {
 
     @Override
     public String doRefactoring(String firstMethodPath, String secondMethodPath) {
-        String firstMethodWrapped = "public class Random {" + repository.readFile(firstMethodPath) + "}";
-        String secondMethodWrapped = "public class Name {" + repository.readFile(secondMethodPath) + "}";
         try {
-            CompilationUnit firstClass = StaticJavaParser.parse(firstMethodWrapped);
-            CompilationUnit secondClass = StaticJavaParser.parse(secondMethodWrapped);
+            CompilationUnit firstClass = StaticJavaParser.parse(new File(firstMethodPath));
+            CompilationUnit secondClass = StaticJavaParser.parse(new File(secondMethodPath));
 
             ClassOrInterfaceDeclaration firstClassDeclaration = firstClass.findAll(ClassOrInterfaceDeclaration.class)
                     .stream().findFirst().orElseThrow(ClassNotFoundException::new);
@@ -50,6 +48,7 @@ public class LongMethodRefactoring implements Refactoring {
         BlockStmt firstBody = firstMethod.getBody().orElseThrow(IllegalArgumentException::new);
         BlockStmt secondBody = secondMethod.getBody().orElseThrow(IllegalArgumentException::new);
         firstBody.getStatements().forEach(secondBody.getStatements()::addLast);
+        firstMethod.getParameters().forEach(secondMethod.getParameters()::addLast);
         secondMethod.setName(firstMethod.getNameAsString() + secondMethod.getNameAsString());
     }
 
